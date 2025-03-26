@@ -1,5 +1,5 @@
 import pytest
-from products import Product  # Import your Product class
+from products import Product
 
 
 def test_product_initialization():
@@ -12,11 +12,14 @@ def test_product_initialization():
 
 def test_invalid_initialization():
     with pytest.raises(Exception):
-        Product("", price=1200.50, quantity=10)  # Empty name
+        # Empty name
+        Product("", price=1200.50, quantity=10)
     with pytest.raises(Exception):
-        Product("Laptop", price=-50.0, quantity=10)  # Negative price
+        # Negative price
+        Product("Laptop", price=-50.0, quantity=10)
     with pytest.raises(Exception):
-        Product("Laptop", price=1200.50, quantity=-5)  # Negative quantity
+        # Negative quantity
+        Product("Laptop", price=1200.50, quantity=-5)
 
 
 def test_get_quantity():
@@ -26,12 +29,23 @@ def test_get_quantity():
 
 def test_set_quantity():
     p = Product("Tablet", price=300.0, quantity=5)
+
+    # add 5
     p.set_quantity(5)
     assert p.get_quantity() == 10
 
-    p.set_quantity(-10)  # Should set quantity to 0
-    assert p.get_quantity() == 0
-    assert p.get_status() is False  # Product should be inactive
+    # add 0
+    p.set_quantity(0)
+    assert p.get_quantity() == 10
+    assert p.get_status() is True
+
+    with pytest.raises(Exception):
+        # Not integer
+        p.set_quantity("20")
+
+    with pytest.raises(Exception):
+        # Invalid quantity
+        p.set_quantity(-1)
 
 
 def test_buy():
@@ -40,18 +54,23 @@ def test_buy():
     assert p.get_quantity() == 8
 
     with pytest.raises(Exception):
-        p.buy(20)  # Not enough stock
+        # Not enough stock
+        p.buy(20)
 
     with pytest.raises(Exception):
-        p.buy(-1)  # Invalid quantity
+        # Invalid quantity
+        p.buy(-1)
 
 
 def test_status():
     p = Product("Keyboard", price=50.0, quantity=1)
-    assert p.get_status() is True  # Initially active
+    # Initially active
+    assert p.get_status() is True
 
-    p.buy(1)  # Reduce quantity to 0
-    assert p.get_status() is False  # Should now be inactive
+    # Reduce quantity to 0
+    p.buy(1)
+    # Should now be inactive
+    assert p.get_status() is False
 
 
 def test_activation():

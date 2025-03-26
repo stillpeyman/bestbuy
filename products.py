@@ -7,7 +7,7 @@ class Product:
             raise Exception("Error, price must be float and greater than 0!")
 
         if not isinstance(quantity, int) or quantity < 0:
-            raise Exception("Error, quantity must be integer and greater or equal to 0!")
+            raise Exception("Error, quantity must be a positive integer!")
 
         self.name = name
         self.price = float(price)
@@ -18,7 +18,11 @@ class Product:
         return self.quantity
 
     def set_quantity(self, quantity):
+        if not isinstance(quantity, int) or quantity < 0:
+            raise Exception("Error, quantity must be a positive integer!")
+
         self.quantity += quantity
+
         if self.quantity == 0:
             self.is_active = False
 
@@ -32,7 +36,7 @@ class Product:
         self.is_active = False
 
     def show(self):
-        print(f"{self.name}, Price: {self.price}, Quantity: {self.quantity}")
+        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}"
 
     def buy(self, quantity):
         if not isinstance(quantity, int) or quantity <= 0:

@@ -22,10 +22,12 @@ class Store:
         return sum(product.get_quantity() for product in self.product_list)
 
     def get_all_products(self):
-        return [product for product in self.product_list if product.get_status()]
+        return [product.show() for product in self.product_list if product.get_status()]
+
 
     def order(self, shopping_list):
         total_price = 0.0
         for product, quantity in shopping_list:
             total_price += product.buy(quantity)
         return total_price
+
