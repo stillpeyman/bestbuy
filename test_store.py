@@ -6,7 +6,7 @@ from products import Product
 """
 First, create a 'pytest' Fixture: a function to set up reusable test data before each test runs,
 in this case here create a Store instance with some products to be used in every single test,
-thus avoid code repetition/duplication, keep it clean, easy to maintain!
+thus avoid code repetition/duplication, keep it clean and easy to maintain!
 """
 @pytest.fixture
 def sample_store():
