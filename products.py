@@ -1,4 +1,5 @@
 class Product:
+
     def __init__(self, name, price, quantity, is_active=True):
         """Gets product name, price and quantity and initializes
         a product, by default is_active (availability) set to 'True'."""
@@ -16,10 +17,12 @@ class Product:
         self.quantity = quantity
         self.is_active = is_active
 
+
     def get_quantity(self):
         """Getter function for quantity.
         Returns the quantity (int)."""
         return self.quantity
+
 
     def set_quantity(self, quantity):
         """Setter function for quantity.
@@ -32,22 +35,27 @@ class Product:
         if self.quantity == 0:
             self.is_active = False
 
+
     def get_status(self):
         """Getter function for active. Returns True
         if the product is active, otherwise False."""
         return self.is_active
 
+
     def activate(self):
         """Activates the product."""
         self.is_active = True
+
 
     def deactivate(self):
         """Deactivates the product."""
         self.is_active = False
 
+
     def show(self):
         """Returns a string that represents the product."""
         return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}"
+
 
     def buy(self, quantity):
         """

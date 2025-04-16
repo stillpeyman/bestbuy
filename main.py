@@ -16,10 +16,14 @@ def make_order(store_instance):
     shopping_list = []
 
     while True:
-        user_order = input("Which product # do you want? ").strip()
+        user_order = input("Enter the product # you want: ").strip()
 
         if user_order == "":
             break
+
+        if not user_order.strip():
+            print("Empty input not valid. Please enter a product #.")
+            continue
 
         try:
             product_index = int(user_order) - 1
@@ -31,15 +35,20 @@ def make_order(store_instance):
             product = store_inventory[product_index]
 
             while True:
-                amount = input("What amount do you want? ").strip()
+                amount = input("Enter the amount you want: ").strip()
+
+                if user_order == "":
+                    break
 
                 if not amount.isdigit():
                     print("Please enter a valid number for the amount.")
                     continue
 
                 amount = int(amount)
-                if amount > product.quantity:
-                    print(f"Only {product.quantity} available. Enter a lower amount.")
+                if amount <= 0 or amount > product.quantity:
+                    print(f"Please enter an amount between 1 and {product.quantity}.")
+                    continue
+
                 else:
                     break
 
