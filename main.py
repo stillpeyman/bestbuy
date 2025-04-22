@@ -1,16 +1,20 @@
-import textwrap
 import products
 import store
 
 
 def exit_store():
-    """Exits the program"""
+    """
+    Exit the program.
+    """
     print("GOODBYE!")
 
 
 def make_order(store_instance):
-    """Handles making an order"""
+    """
+    Handle making an order.
+    """
     list_all_products(store_instance)
+
     print("\nTo FINISH your order, press ENTER.")
 
     shopping_list = []
@@ -66,15 +70,9 @@ def make_order(store_instance):
                 active_products = [product for product in store_instance.product_list if product.is_active]
                 if not active_products:
                     print_framed_message("EVERYTHING IS SOLD OUT!")
-                    break
+                    return
                 else:
                     list_all_products(store_instance)
-
-            # # Check if anything is left to buy
-            # active_products = [product for product in store_instance.product_list if product.is_active]
-            # if not active_products:
-            #     print_framed_message("EVERYTHING IS SOLD OUT!")
-            #     break
 
         except ValueError:
             print("Invalid input. Please enter a number.")
@@ -84,14 +82,24 @@ def make_order(store_instance):
 
 
 def show_total_quantity(store_instance):
-    """Shows the total number of items in the store"""
+    """
+    Show the total number of items in the store.
+    """
     print(f"\nTotal of {store_instance.get_total_quantity()} items in store.")
 
 
 def list_all_products(store_instance):
-    """Lists of all products in the store"""
-    for index, product in enumerate(store_instance.get_all_products(), start=1):
-        print(f"{index}. {product}")
+    """
+    List all products in the store.
+    """
+    if len(store_instance.get_all_products()) == 0:
+        print_framed_message("EVERYTHING IS SOLD OUT!")
+
+    else:
+        for index, product in enumerate(store_instance.get_all_products(), start=1):
+            print(f"{index}. {product}")
+
+
 
 
 def print_framed_message(message: str, pad: int = 4):
@@ -112,7 +120,9 @@ def print_framed_message(message: str, pad: int = 4):
 
 
 def execute_user_choice(store_instance):
-    """Handles user input and calls corresponding function"""
+    """
+    Handle user input and calls corresponding function.
+    """
     choices = {
         "1": list_all_products,
         "2": show_total_quantity,
@@ -127,10 +137,14 @@ def execute_user_choice(store_instance):
 
         if user_choice == "4":
             exit_store()
-            break
+            return
 
         elif action:
             action(store_instance)
+            if len(store_instance.get_all_products()) == 0:
+                exit_store()
+                return
+
             input("\nPress ENTER to get back to the MENU.")
             print()
             start()
@@ -138,12 +152,11 @@ def execute_user_choice(store_instance):
         else:
             print("Invalid choice, please try again.")
 
-        # print()
-        # start()
-
 
 def start():
-    """Displays the store menu"""
+    """
+    Display the store menu.
+    """
     title = "STORE MENU"
     options = [
         "1. List all products in store",
@@ -193,7 +206,9 @@ def start():
 
 
 def main():
-    """Main function starts the program"""
+    """
+    Main function starts the program.
+    """
     # setup initial stock of inventory
     product_list = [products.Product("MacBook Air M2", price=1450, quantity=100),
                     products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
