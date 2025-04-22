@@ -100,8 +100,6 @@ def list_all_products(store_instance):
             print(f"{index}. {product}")
 
 
-
-
 def print_framed_message(message: str, pad: int = 4):
     """
     Print any message framed with asterisks, padded and centered.
