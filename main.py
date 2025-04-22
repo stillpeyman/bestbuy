@@ -5,18 +5,18 @@ import store
 
 def exit_store():
     """Exits the program"""
-    print("Goodbye!")
+    print("GOODBYE!")
 
 
 def make_order(store_instance):
     """Handles making an order"""
     list_all_products(store_instance)
-    print("When you want to finish order, enter empty text.")
+    print("\nTo FINISH your order, press ENTER.")
 
     shopping_list = []
 
     while True:
-        user_order = input("Enter the product # you want: ").strip()
+        user_order = input("\nEnter the product # you want: ").strip()
 
         if user_order == "":
             break
@@ -26,13 +26,14 @@ def make_order(store_instance):
             continue
 
         try:
-            product_index = int(user_order) - 1
-            store_inventory = store_instance.product_list
-            if product_index < 0 or product_index >= len(store_inventory):
+            product_id = int(user_order) - 1
+            store_inventory = store_instance.get_active_products()
+
+            if product_id < 0 or product_id >= len(store_inventory):
                 print("Invalid product number. Try again.")
                 continue
 
-            product = store_inventory[product_index]
+            product = store_inventory[product_id]
 
             while True:
                 amount = input("Enter the amount you want: ").strip()
@@ -52,14 +53,34 @@ def make_order(store_instance):
                 else:
                     break
 
+
             shopping_list.append((product, amount))
+
+            # Update product quantity
+            product.buy(amount)
+
+            if product.quantity == 0:
+                print_framed_message(f"{product.name} is now SOLD OUT!")
+
+                # Check if anything is left to buy
+                active_products = [product for product in store_instance.product_list if product.is_active]
+                if not active_products:
+                    print_framed_message("EVERYTHING IS SOLD OUT!")
+                    break
+                else:
+                    list_all_products(store_instance)
+
+            # # Check if anything is left to buy
+            # active_products = [product for product in store_instance.product_list if product.is_active]
+            # if not active_products:
+            #     print_framed_message("EVERYTHING IS SOLD OUT!")
+            #     break
 
         except ValueError:
             print("Invalid input. Please enter a number.")
 
     if shopping_list:
-        print("*" * 10)
-        print(f"Order made! Total payment {store_instance.order(shopping_list)}")
+        print_framed_message(f"Order made! Total payment {store_instance.order(shopping_list)}")
 
 
 def show_total_quantity(store_instance):
@@ -69,10 +90,25 @@ def show_total_quantity(store_instance):
 
 def list_all_products(store_instance):
     """Lists of all products in the store"""
-    print("-" * 10)
     for index, product in enumerate(store_instance.get_all_products(), start=1):
         print(f"{index}. {product}")
-    print("-" * 10)
+
+
+def print_framed_message(message: str, pad: int = 4):
+    """
+    Print any message framed with asterisks, padded and centered.
+    """
+    lines = message.split("\n")
+    max_length = max(len(line) for line in lines)
+    width = max_length + pad * 2
+    border = "*" * (width + 2)
+
+    print()
+    print(border)
+    for line in lines:
+        print("*" + line.center(width) + "*")
+    print(border)
+    print()
 
 
 def execute_user_choice(store_instance):
@@ -86,6 +122,7 @@ def execute_user_choice(store_instance):
 
     while True:
         user_choice = input("\nPlease choose a number: ").strip()
+        print()
         action = choices.get(user_choice)
 
         if user_choice == "4":
@@ -94,23 +131,65 @@ def execute_user_choice(store_instance):
 
         elif action:
             action(store_instance)
+            input("\nPress ENTER to get back to the MENU.")
+            print()
+            start()
+
         else:
             print("Invalid choice, please try again.")
 
-        start()
+        # print()
+        # start()
 
 
 def start():
     """Displays the store menu"""
-    width = 30
-    menu = textwrap.dedent(f"""
-        {"Store Menu".center(width)}
-        {"-" * 29}
-        1. List all products in store
-        2. Show total amount in store
-        3. Make an order
-        4. Quit""")
-    print(menu)
+    title = "STORE MENU"
+    options = [
+        "1. List all products in store",
+        "2. Show total amount in store",
+        "3. Make an order",
+        "4. Quit"
+    ]
+
+    # space on each side
+    padding = 4
+
+    # centered title, underlined with dashes
+    lines = [title.center(40)]
+
+    # determine max width
+    max_length = max(len(line) for line in lines)
+    width = max_length + padding * 2
+    border = "*" * (width + 2)
+
+    # dashed lines under title but in full width
+    dash_line = "–" * (width - 2)
+    lines.append(dash_line)
+
+    # left-aligned options
+    for option in options:
+        lines.append(option)
+
+    # print framed border
+    print(border)
+    # top spacing
+    print("*" + " " * width + "*")
+
+    for i, line in enumerate(lines):
+        # center first two lines
+        if i < 2:
+            padded_line = line.center(width)
+
+        else:
+            # left-align options
+            padded_line = (" " * 4 + line).ljust(width)
+
+        print(f"*{padded_line}*")
+
+    # bottom spacing
+    print("*" + " " * width + "*")
+    print(border)
 
 
 def main():

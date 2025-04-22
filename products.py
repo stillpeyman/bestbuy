@@ -30,7 +30,7 @@ class Product:
         if not isinstance(quantity, int) or quantity < 0:
             raise Exception("Error, quantity must be a positive integer!")
 
-        self.quantity += quantity
+        self.quantity = quantity
 
         if self.quantity == 0:
             self.is_active = False
@@ -75,6 +75,6 @@ class Product:
         self.quantity -= quantity
 
         if self.quantity == 0:
-            self.is_active = False
+            self.deactivate()
 
         return self.price * quantity
