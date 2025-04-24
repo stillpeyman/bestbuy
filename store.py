@@ -40,14 +40,14 @@ class Store:
 
     def get_all_products(self):
         """
-        Return a list of all products in the store that are active.
+        Return a list of all products (str) in the store that are active.
         """
         return [product.show() for product in self.product_list if product.get_status()]
 
 
     def get_active_products(self):
         """
-        Return actual active products.
+        Return actual active product instances.
         """
         return [product for product in self.product_list if product.get_status()]
 
@@ -59,6 +59,16 @@ class Store:
         """
         total_price = 0.0
         for product, quantity in shopping_list:
-            total_price += product.price * quantity
+            total_price += product.buy(quantity)
         return total_price
 
+
+    def calculate_subtotal(self, shopping_list):
+        """
+        Get a list of tuples, each tuple has 2 items (product: Product, quantity),
+        calculate the sub-total and return sub-total of the order.
+        """
+        sub_total = 0.0
+        for product, quantity in shopping_list:
+            sub_total += product.calculate_price(quantity)
+        return sub_total

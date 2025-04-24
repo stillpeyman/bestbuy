@@ -19,12 +19,13 @@ def sample_store():
 
 
 def test_store_init(sample_store):
-    """Test store init with valid product list"""
+    """Test store init with valid product list."""
     # Store should have 3 products
     assert len(sample_store.product_list) == 3
 
 
 def test_invalid_init():
+    """Test invalid store init."""
     with pytest.raises(Exception):
         # Empty list should raise an exception
         Store([])
@@ -35,7 +36,7 @@ def test_invalid_init():
 
 
 def test_add_product(sample_store):
-    """Test adding a new product"""
+    """Test adding a new product."""
     new_product = Product("Sony Alpha 7", price=1700, quantity=10)
     sample_store.add_product(new_product)
 
@@ -46,15 +47,24 @@ def test_add_product(sample_store):
 
 
 def test_add_invalid_product(sample_store):
-    """Test adding invalid product (not a Product instance)"""
+    """Test adding invalid product (not a Product instance)."""
     with pytest.raises(Exception):
         # Should raise an exception
         sample_store.add_product("Not a product object")
 
 
 def test_remove_product(sample_store):
-    """Test removing a product that is not in the store"""
+    """
+    Test removing an existing product
+    and a product that is not in the store.
+    """
+    product_to_remove = sample_store.product_list[1]
     fake_product = Product("Nonexistent item", price=100, quantity=10)
+
+    sample_store.remove_product(product_to_remove)
+
+    assert product_to_remove not in sample_store.product_list
+    assert len(sample_store.product_list) == 2
 
     with pytest.raises(Exception):
         # Should raise an exception
@@ -62,27 +72,52 @@ def test_remove_product(sample_store):
 
 
 def test_get_total_quantity(sample_store):
-    """Test getting total quantity of all products in store"""
+    """Test getting total quantity of all products in store."""
     # Should be a total of 850
     assert sample_store.get_total_quantity() == (100 + 500 + 250)
 
 
 def test_get_all_products(sample_store):
-    """Test retrieving all active products"""
+    """Test retrieving list of all active products (str)."""
     active_products = sample_store.get_all_products()
+
+    assert isinstance(active_products, list)
 
     # All 3 products are active
     assert len(active_products) == 3
 
+    for product in active_products:
+        # Should be a string
+        assert isinstance(product, str)
+
     # Deactivate one product
     sample_store.product_list[0].deactivate()
     active_products = sample_store.get_all_products()
-
     # Should be only 2 products
     assert len(active_products) == 2
 
 
-def test_oder(sample_store):
+def test_get_active_products(sample_store):
+    """Test retrieving list of all active product instances."""
+    active_products = sample_store.get_active_products()
+
+    assert isinstance(active_products, list)
+
+    # All 3 products are active
+    assert len(active_products) == 3
+
+    for product in active_products:
+        # Should be a string
+        assert isinstance(product, Product)
+
+    # Deactivate one product
+    sample_store.product_list[0].deactivate()
+    active_products = sample_store.get_all_products()
+    # Should be only 2 products
+    assert len(active_products) == 2
+
+
+def test_order(sample_store):
     """Test ordering products from the store"""
     # Buy 2 MacBooks and 1 Bose Earbuds
     shopping_list = [

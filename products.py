@@ -92,3 +92,17 @@ class Product:
             self.deactivate()
 
         return self.price * quantity
+
+
+    def calculate_price(self, quantity):
+        """
+        Calculate total price for a given quantity, applying promotions if available,
+        without actually buying the product or modifying its quantity.
+        """
+        if not isinstance(quantity, int) or quantity <= 0:
+            raise Exception("Error, quantity must be integer and greater than 0!")
+
+        if not self.is_active:
+            raise Exception("Error, product is unavailable at the moment!")
+
+        return self.price * quantity
