@@ -109,6 +109,7 @@ def show_available_products_for_order(store_instance, reserved_quantities):
     """
     Show available products for order, with their remaining quantities.
     """
+    # init a list of tuples (available_product, quantity: available_left)
     available_products = []
 
     for product in store_instance.get_active_products():
@@ -125,6 +126,7 @@ def show_available_products_for_order(store_instance, reserved_quantities):
         print(f"{i}. {product.name}, Price: {product.price}, Quantity: {available_left}")
     print("-" * 10)
 
+    # Return list of only products because in make_order() user will choose from this list by index number
     return [product for product, _ in available_products]
 
 
@@ -139,7 +141,7 @@ def make_order(store_instance):
     print("To CANCEL your order, enter 'q'.")
 
     while True:
-        # Store and show available products before each selection
+        # Create a list of available products and show available products before each selection
         available_products = show_available_products_for_order(store_instance, reserved_quantities)
 
         if not available_products:
